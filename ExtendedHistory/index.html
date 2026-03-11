@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Extended History - Chrome Extension </title>
     <meta name="description" content="Extended History is a powerful Chrome extension that replaces the default history with unlimited retention (more then 90 days), time tracking, sessions management, and advanced filtering capabilities. If you're looking for better alternative to BetterHistory, this is it">
+    <meta name="keywords" content="Extended History, Chrome extension, browser history, unlimited history, history manager, tab storage, session manager, encrypted history, history search, browsing history, time tracking, history export, ignore list, most visited sites, Chrome history alternative, BetterHistory alternative, history popup, reading mode, context menu history">
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" href="https://github.com/elveapps/elveapps.github.io/blob/main/ExtendedHistory/icon128.png?raw=true" type="image/png">
 </head>
@@ -117,6 +118,75 @@
                     <h3>Privacy First</h3>
                     <p>All data stays on your device. No cloud sync, no external servers, no tracking. Your history is yours alone.</p>
                 </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3>Encrypted Export</h3>
+                    <p>Protect your exported history with encryption. Even if your backup file falls into the wrong hands, your data stays secure with password protection.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">📂</div>
+                    <h3>Tab Storage</h3>
+                    <p>Save and manage groups of tabs for later. Right-click "Tab Storage" in the popup to instantly see all your currently active tabs.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">👁️</div>
+                    <h3>Reading Mode</h3>
+                    <p>Browse and read your exported history directly — no need to import it first. Works seamlessly even with encrypted history files.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Popup Search & Quick Access</h3>
+                    <p>Search your history right from the popup. Instantly access recent history, recent tabs, and stored tabs — all without opening a new tab.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🚫</div>
+                    <h3>Ignore List</h3>
+                    <p>Exclude specific sites from being saved in your history. Add them instantly via right-click context menu, or manage them manually in settings.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">📈</div>
+                    <h3>Most Visited Sites</h3>
+                    <p>Right-click "Recent History" in the popup to switch to "Most Visited" — see your top sites from the last 10 days at a glance.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Screenshots Section -->
+    <section class="screenshots-section">
+        <div class="container">
+            <h2 class="section-title">See It In Action</h2>
+            <div class="screenshot-viewer">
+                <div class="screenshot-main">
+                    <div class="screenshot-frame">
+                        <img src="screenshots/1.jpg" alt="Extended History Screenshot" class="screenshot-img" id="screenshotImg">
+                    </div>
+                    <button class="screenshot-arrow screenshot-prev" onclick="changeScreenshot(-1)" aria-label="Previous screenshot">&#8249;</button>
+                    <button class="screenshot-arrow screenshot-next" onclick="changeScreenshot(1)" aria-label="Next screenshot">&#8250;</button>
+                </div>
+                <div class="screenshot-dots" id="screenshotDots">
+                    <button class="screenshot-dot active" onclick="goToScreenshot(0)" aria-label="Screenshot 1"></button>
+                    <button class="screenshot-dot" onclick="goToScreenshot(1)" aria-label="Screenshot 2"></button>
+                    <button class="screenshot-dot" onclick="goToScreenshot(2)" aria-label="Screenshot 3"></button>
+                    <button class="screenshot-dot" onclick="goToScreenshot(3)" aria-label="Screenshot 4"></button>
+                    <button class="screenshot-dot" onclick="goToScreenshot(4)" aria-label="Screenshot 5"></button>
+                </div>
+                <div class="screenshot-thumbs" id="screenshotThumbs">
+                    <button class="screenshot-thumb active" onclick="goToScreenshot(0)"><img src="screenshots/1.jpg" alt="Screenshot 1"></button>
+                    <button class="screenshot-thumb" onclick="goToScreenshot(1)"><img src="screenshots/2.jpg" alt="Screenshot 2"></button>
+                    <button class="screenshot-thumb" onclick="goToScreenshot(2)"><img src="screenshots/3.jpg" alt="Screenshot 3"></button>
+                    <button class="screenshot-thumb" onclick="goToScreenshot(3)"><img src="screenshots/4.jpg" alt="Screenshot 4"></button>
+                    <button class="screenshot-thumb" onclick="goToScreenshot(4)"><img src="screenshots/5.jpg" alt="Screenshot 5"></button>
+                    <button class="screenshot-thumb" onclick="goToScreenshot(5)"><img src="screenshots/6.jpg" alt="Screenshot 6"></button>
+                    <button class="screenshot-thumb" onclick="goToScreenshot(6)"><img src="screenshots/7.jpg" alt="Screenshot 7"></button>
+                    <button class="screenshot-thumb" onclick="goToScreenshot(7)"><img src="screenshots/8.jpg" alt="Screenshot 8"></button>
+                </div>
             </div>
         </div>
     </section>
@@ -184,14 +254,8 @@
     <section class="future-plans-section">
         <div class="container">
             <h2 class="section-title">Future Plans</h2>
-            <p style="text-align: center; color: var(--text-secondary-light); margin-bottom: 48px; max-width: 700px; margin-left: auto; margin-right: auto;">We're constantly working to improve Extended History. Here are some features we're planning to add:</p>
-            <div class="features-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); max-width: 900px; margin: 0 auto;">
-                <div class="feature-card">
-                    <div class="feature-icon">🔐</div>
-                    <h3>Encrypted History Data</h3>
-                    <p>Optional encryption for your history data with a master password. Add an extra layer of security to protect your browsing history from unauthorized access on shared devices.</p>
-                </div>
-
+            <p style="text-align: center; color: var(--text-secondary-light); margin-bottom: 48px; max-width: 700px; margin-left: auto; margin-right: auto;">We're constantly working to improve Extended History. Here's what's coming next:</p>
+            <div class="features-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); max-width: 600px; margin: 0 auto;">
                 <div class="feature-card">
                     <div class="feature-icon">🔔</div>
                     <h3>Smart Notifications</h3>

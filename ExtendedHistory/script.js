@@ -257,3 +257,63 @@ document.addEventListener('keydown', (e) => {
 console.log('%c Extended History Website ', 'background: linear-gradient(135deg, #3b9eff, #2dd4a0); color: white; padding: 10px; border-radius: 5px; font-weight: bold;');
 console.log('Version: 1.0.0');
 console.log('All features loaded successfully ✓');
+
+// =====================
+// Screenshot Gallery
+// =====================
+(function() {
+    const total = 8;
+    let current = 0;
+    let isTransitioning = false;
+
+    const img = document.getElementById('screenshotImg');
+    const dots = document.querySelectorAll('.screenshot-dot');
+    const thumbs = document.querySelectorAll('.screenshot-thumb');
+
+    function update(index, instant) {
+        if (!img) return;
+        if (index < 0) index = total - 1;
+        if (index >= total) index = 0;
+        current = index;
+
+        const newSrc = 'screenshots/' + (current + 1) + '.jpg';
+
+        if (instant) {
+            img.src = newSrc;
+        } else {
+            if (isTransitioning) return;
+            isTransitioning = true;
+            img.classList.add('transitioning');
+            setTimeout(() => {
+                img.src = newSrc;
+                img.classList.remove('transitioning');
+                isTransitioning = false;
+            }, 350);
+        }
+
+        dots.forEach((d, i) => d.classList.toggle('active', i === current));
+        thumbs.forEach((t, i) => t.classList.toggle('active', i === current));
+    }
+
+    window.changeScreenshot = function(dir) { update(current + dir); };
+    window.goToScreenshot = function(index) { update(index); };
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+        const section = document.querySelector('.screenshots-section');
+        if (!section) return;
+        if (e.key === 'ArrowLeft') changeScreenshot(-1);
+        if (e.key === 'ArrowRight') changeScreenshot(1);
+    });
+
+    // Touch/swipe support
+    let touchStartX = 0;
+    const frame = document.querySelector('.screenshot-frame');
+    if (frame) {
+        frame.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; }, { passive: true });
+        frame.addEventListener('touchend', (e) => {
+            const diff = touchStartX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 40) changeScreenshot(diff > 0 ? 1 : -1);
+        });
+    }
+})();
