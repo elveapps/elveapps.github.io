@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Extended Page – Beautiful New Tab for Chrome</title>
+<meta name="description" content="A beautiful, customizable new tab page for Chrome. Clock, search, top sites, weather widget, sidebar and more. Works standalone or paired with Extended History."/>
+<link rel="icon" href="https://elveapps.me/icon128.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+/* ═══════════════════ RESET & VARS */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --accent: #3b9eff;
+  --accent2: #2dd4a0;
+  --bg: #0d0d12;
+  --s1: #18181f;
+  --s2: #1f1f28;
+  --border: rgba(255,255,255,0.07);
+  --text: #f0eee8;
+  --text2: #a09eb0;
+  --text3: #5a5870;
+  --font: 'DM Sans', system-ui, sans-serif;
+  --mono: 'DM Mono', monospace;
+  --radius: 16px;
+  --radius-sm: 10px;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ═══════════════════ NAV */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  display: flex; align-items: center; gap: 16px;
+  padding: 0 32px;
+  height: 58px;
+  background: rgba(13,13,18,0.88);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.nav-logo-icon {
+  width: 30px; height: 30px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px;
+}
+.nav-logo-text { font-weight: 700; font-size: 0.95rem; color: var(--text); }
+.nav-links { display: flex; gap: 4px; margin-left: auto; }
+.nav-links a {
+  padding: 6px 12px;
+  color: var(--text2);
+  font-size: 0.82rem;
+  font-weight: 500;
+  border-radius: 6px;
+  transition: color 0.15s, background 0.15s;
+  text-decoration: none;
+}
+.nav-links a:hover { color: var(--text); background: var(--s1); }
+.nav-cta {
+  padding: 7px 16px;
+  background: var(--accent);
+  color: #fff !important;
+  font-weight: 600;
+  border-radius: 7px;
+  font-size: 0.82rem;
+  transition: opacity 0.15s !important;
+}
+.nav-cta:hover { opacity: 0.85; background: var(--accent) !important; text-decoration: none !important; }
+
+/* ═══════════════════ HERO */
+.hero {
+  text-align: center;
+  padding: 96px 24px 80px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -120px; left: 50%; transform: translateX(-50%);
+  width: 800px; height: 500px;
+  background: radial-gradient(ellipse at center, rgba(59,158,255,0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 5px 14px;
+  background: rgba(59,158,255,0.1);
+  border: 1px solid rgba(59,158,255,0.25);
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+}
+.hero h1 {
+  font-size: clamp(2.2rem, 5vw, 3.6rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin-bottom: 20px;
+  max-width: 700px;
+  margin-left: auto; margin-right: auto;
+}
+.hero h1 span {
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero-sub {
+  font-size: 1.05rem;
+  color: var(--text2);
+  max-width: 520px;
+  margin: 0 auto 36px;
+  line-height: 1.65;
+}
+.hero-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.btn-primary {
+  padding: 12px 28px;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.92rem;
+  border-radius: 9px;
+  transition: opacity 0.15s, transform 0.15s;
+  display: inline-block;
+  text-decoration: none;
+}
+.btn-primary:hover { opacity: 0.88; transform: translateY(-1px); text-decoration: none; }
+.btn-secondary {
+  padding: 12px 28px;
+  background: var(--s1);
+  color: var(--text2);
+  font-weight: 600;
+  font-size: 0.92rem;
+  border-radius: 9px;
+  border: 1px solid var(--border);
+  transition: border-color 0.15s, color 0.15s;
+  display: inline-block;
+  text-decoration: none;
+}
+.btn-secondary:hover { border-color: var(--accent); color: var(--text); text-decoration: none; }
+
+/* ═══════════════════ COMPANION BANNER */
+.companion-banner {
+  max-width: 720px; margin: 0 auto 80px;
+  background: var(--s1);
+  border: 1px solid rgba(59,158,255,0.2);
+  border-radius: var(--radius);
+  padding: 20px 28px;
+  display: flex; align-items: center; gap: 18px;
+}
+.companion-icon {
+  width: 44px; height: 44px; flex-shrink: 0;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+}
+.companion-text { flex: 1; }
+.companion-text strong { color: var(--text); font-size: 0.9rem; }
+.companion-text p { color: var(--text2); font-size: 0.8rem; margin-top: 3px; }
+.companion-banner a { font-size: 0.8rem; font-weight: 600; white-space: nowrap; }
+
+/* ═══════════════════ SECTIONS */
+.section { padding: 80px 24px; max-width: 1100px; margin: 0 auto; }
+.section-label {
+  font-size: 0.7rem; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 12px;
+}
+.section-title {
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  font-weight: 700; letter-spacing: -0.02em;
+  margin-bottom: 12px;
+}
+.section-sub {
+  color: var(--text2); font-size: 0.95rem;
+  max-width: 520px; line-height: 1.65;
+}
+
+/* ═══════════════════ FEATURES GRID */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  margin-top: 48px;
+}
+.feat-card {
+  background: var(--s1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  transition: border-color 0.2s, transform 0.2s;
+}
+.feat-card:hover { border-color: rgba(59,158,255,0.3); transform: translateY(-2px); }
+.feat-icon { font-size: 1.6rem; margin-bottom: 14px; display: block; }
+.feat-title { font-size: 0.9rem; font-weight: 700; margin-bottom: 7px; }
+.feat-desc { font-size: 0.8rem; color: var(--text2); line-height: 1.6; }
+
+/* ═══════════════════ INTEGRATION SECTION */
+.integration-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+  margin-top: 48px;
+}
+@media (max-width: 640px) { .integration-grid { grid-template-columns: 1fr; } }
+.int-card {
+  background: var(--s1); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 28px;
+}
+.int-card.highlighted { border-color: rgba(59,158,255,0.3); background: rgba(59,158,255,0.04); }
+.int-tag {
+  display: inline-block; padding: 3px 10px;
+  border-radius: 20px; font-size: 0.68rem; font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.int-tag.standalone { background: rgba(45,212,160,0.15); color: var(--accent2); }
+.int-tag.paired { background: rgba(59,158,255,0.15); color: var(--accent); }
+.int-title { font-size: 1rem; font-weight: 700; margin-bottom: 10px; }
+.int-list { list-style: none; }
+.int-list li {
+  font-size: 0.82rem; color: var(--text2);
+  padding: 5px 0; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 8px;
+}
+.int-list li:last-child { border-bottom: none; }
+.int-list li::before { content: '✓'; color: var(--accent2); font-weight: 700; flex-shrink: 0; }
+
+/* ═══════════════════ PRIVACY */
+.privacy-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px; margin-top: 48px;
+}
+.priv-card {
+  background: var(--s1); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 24px;
+}
+.priv-icon { font-size: 1.5rem; margin-bottom: 12px; display: block; }
+.priv-title { font-size: 0.88rem; font-weight: 700; margin-bottom: 8px; }
+.priv-desc { font-size: 0.78rem; color: var(--text2); line-height: 1.6; }
+.priv-policy-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  margin-top: 40px;
+  padding: 10px 20px;
+  background: var(--s1); border: 1px solid var(--border);
+  border-radius: 8px; font-size: 0.82rem; color: var(--text2);
+  transition: border-color 0.15s, color 0.15s;
+  text-decoration: none;
+}
+.priv-policy-link:hover { border-color: var(--accent); color: var(--accent); text-decoration: none; }
+
+/* ═══════════════════ PERMISSIONS */
+.permissions-list {
+  display: flex; flex-direction: column; gap: 10px;
+  margin-top: 32px; max-width: 680px;
+}
+.perm-row {
+  display: flex; align-items: flex-start; gap: 14px;
+  background: var(--s1); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 14px 18px;
+}
+.perm-name {
+  font-family: var(--mono); font-size: 0.78rem;
+  color: var(--accent); font-weight: 500;
+  min-width: 120px; padding-top: 1px;
+}
+.perm-reason { font-size: 0.8rem; color: var(--text2); line-height: 1.5; }
+
+/* ═══════════════════ FAQ */
+.faq-list { display: flex; flex-direction: column; gap: 8px; margin-top: 40px; max-width: 720px; }
+.faq-item {
+  background: var(--s1); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); overflow: hidden;
+}
+.faq-q {
+  width: 100%; text-align: left;
+  padding: 16px 20px;
+  background: none; border: none; color: var(--text);
+  font-family: var(--font); font-size: 0.88rem; font-weight: 600;
+  cursor: pointer; display: flex; justify-content: space-between; align-items: center;
+  gap: 12px;
+}
+.faq-q::after { content: '▼'; font-size: 0.65rem; color: var(--text3); flex-shrink: 0; transition: transform 0.2s; }
+.faq-item.open .faq-q::after { transform: rotate(180deg); }
+.faq-a { display: none; padding: 0 20px 16px; font-size: 0.82rem; color: var(--text2); line-height: 1.65; }
+.faq-item.open .faq-a { display: block; }
+
+/* ═══════════════════ FOOTER */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 48px 32px 32px;
+  display: grid; grid-template-columns: 1.5fr 1fr 1fr;
+  gap: 40px; max-width: 900px; margin: 0 auto;
+}
+@media (max-width: 600px) { footer { grid-template-columns: 1fr; gap: 28px; } }
+.footer-brand p { font-size: 0.8rem; color: var(--text3); margin-top: 8px; line-height: 1.6; max-width: 260px; }
+.footer-copy { margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border); text-align: center; font-size: 0.75rem; color: var(--text3); max-width: 900px; margin-left: auto; margin-right: auto; padding-left: 32px; padding-right: 32px; }
+.footer-col h4 { font-size: 0.78rem; font-weight: 700; color: var(--text2); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.06em; }
+.footer-col a { display: block; font-size: 0.8rem; color: var(--text3); margin-bottom: 8px; transition: color 0.15s; text-decoration: none; }
+.footer-col a:hover { color: var(--text); }
+
+/* ═══════════════════ DIVIDER */
+hr.section-divider { border: none; border-top: 1px solid var(--border); max-width: 1100px; margin: 0 auto; }
+
+/* ═══════════════════ RESPONSIVE */
+@media (max-width: 600px) {
+  nav { padding: 0 16px; }
+  .nav-links a:not(.nav-cta) { display: none; }
+  .hero { padding: 64px 16px 56px; }
+  .companion-banner { flex-direction: column; text-align: center; }
+  .section { padding: 56px 16px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ NAV -->
+<nav>
+  <a class="nav-logo" href="#">
+    <div class="nav-logo-icon"><img style="height:35px;width:35px" src="icons/icon128.png"/></div>
+    <span class="nav-logo-text">Extended Page</span>
+  </a>
+  <div class="nav-links">
+    <a href="#features">Features</a>
+    <a href="#privacy">Privacy</a>
+    <a href="#faq">FAQ</a>
+    <a href="#privacy-policy">Privacy Policy</a>
+    <a href="https://chromewebstore.google.com/detail/extended-page/EXTENSION_ID_HERE" class="nav-cta">Add to Chrome</a>
+  </div>
+</nav>
+
+<!-- ═══ HERO -->
+<section class="hero" id="top">
+  <div class="hero-badge">✦ New Tab Extension</div>
+  <h1>Your New Tab,<br/><span>Actually Useful</span></h1>
+  <p class="hero-sub">A clean, fast, simple and customizable new tab page. Clock, search, top sites, weather, and a collapsible sidebar — all in one place.</p>
+  <div class="hero-btns">
+    <a href="https://chromewebstore.google.com/detail/extended-page/EXTENSION_ID_HERE" class="btn-primary">Add to Chrome — Free</a>
+    <a href="#features" class="btn-secondary">See Features</a>
+  </div>
+</section>
+
+<!-- ═══ COMPANION BANNER -->
+<div style="padding: 0 24px;">
+  <div class="companion-banner">
+    <div class="companion-icon"><img style="height:48px;width:48px" src="icons/icon163.png"/></div>
+    <div class="companion-text">
+      <strong>Better together with Extended History</strong>
+      <p>Pair with Extended History to unlock sidebar history, stored tabs, and top sites powered by 90+ days of your real browsing data.</p>
+    </div>
+    <a href="https://elveapps.me/ExtendedHistory/">Get Extended History →</a>
+  </div>
+</div>
+
+<!-- ═══ FEATURES -->
+<section class="section" id="features">
+  <div class="section-label">Features</div>
+  <h2 class="section-title">Everything you need on a new tab</h2>
+  <p class="section-sub">Designed to be fast, private, and out of your way — until you need it.</p>
+
+  <div class="features-grid">
+    <div class="feat-card">
+      <span class="feat-icon">🕐</span>
+      <div class="feat-title">Clock &amp; Date</div>
+      <div class="feat-desc">Clean, minimal clock with customizable font styles — monospace, serif, system — and optional date display. Toggleable so it never gets in your way.</div>
+    </div>
+    <div class="feat-card">
+      <span class="feat-icon">🔍</span>
+      <div class="feat-title">Unified Search Bar</div>
+      <div class="feat-desc">Search Google, Bing, or any custom search engine directly from the new tab. Smart URL detection opens sites directly without going through a search.</div>
+    </div>
+    <div class="feat-card">
+      <span class="feat-icon">📌</span>
+      <div class="feat-title">Top Sites</div>
+      <div class="feat-desc">Your most visited domains at a glance. When paired with Extended History, powered by 90+ days of data. Otherwise uses native browser history. Show 6–18 sites.</div>
+    </div>
+    <div class="feat-card">
+      <span class="feat-icon">◀</span>
+      <div class="feat-title">Collapsible Sidebar</div>
+      <div class="feat-desc">A slim sidebar that expands on hover. Show most visited pages, stored tabs from Extended History, or any bookmark folder. Stays out of the way when you don't need it.</div>
+    </div>
+    <div class="feat-card">
+      <span class="feat-icon">🌤</span>
+      <div class="feat-title">Weather Widget</div>
+      <div class="feat-desc">A draggable weather widget with city autocomplete. Shows temperature in both °C and °F, conditions, and a custom SVG weather icon. No API key needed.</div>
+    </div>
+    <div class="feat-card">
+      <span class="feat-icon">🖼</span>
+      <div class="feat-title">Wallpapers</div>
+      <div class="feat-desc">Choose from a curated set of wallpapers or upload your own. Adjustable blur overlay keeps the page readable over any background.</div>
+    </div>
+    <div class="feat-card">
+      <span class="feat-icon">🎨</span>
+      <div class="feat-title">Themes &amp; Accent Colors</div>
+      <div class="feat-desc">Full dark and light mode. Seven accent color swatches. Every element respects your chosen theme, including the sidebar, widgets, and settings panel.</div>
+    </div>
+    <div class="feat-card">
+      <span class="feat-icon">📚</span>
+      <div class="feat-title">Bookmark Sidebar</div>
+      <div class="feat-desc">Pick any bookmark folder to show in the sidebar for instant one-click access to your most important links, without ever opening the bookmarks manager.</div>
+    </div>
+    <div class="feat-card">
+      <span class="feat-icon">⚙</span>
+      <div class="feat-title">Settings Panel</div>
+      <div class="feat-desc">All preferences in one slide-out panel. No separate options page needed. Changes apply instantly and persist across sessions via local storage.</div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider"/>
+
+<!-- ═══ INTEGRATION -->
+<section class="section" id="integration">
+  <div class="section-label">Compatibility</div>
+  <h2 class="section-title">Works standalone or paired</h2>
+  <p class="section-sub">Extended Page is fully functional on its own. Install Extended History alongside it for a significant upgrade.</p>
+
+  <div class="integration-grid">
+    <div class="int-card">
+      <span class="int-tag standalone">Standalone</span>
+      <div class="int-title">Without Extended History</div>
+      <ul class="int-list">
+        <li>Clock, date, search bar</li>
+        <li>Top sites from native browser history</li>
+        <li>Bookmark folder sidebar</li>
+        <li>Wallpapers, themes, accent colors</li>
+        <li>Weather widget</li>
+        <li>Full History button opens chrome://history</li>
+      </ul>
+    </div>
+    <div class="int-card highlighted">
+      <span class="int-tag paired">Paired</span>
+      <div class="int-title">With Extended History</div>
+      <ul class="int-list">
+        <li>Everything in Standalone</li>
+        <li>Top sites powered by 90+ days of history</li>
+        <li>Most Visited sidebar (last 10 days)</li>
+        <li>Stored Tabs sidebar</li>
+        <li>Full History opens Extended History page</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider"/>
+
+<!-- ═══ PRIVACY -->
+<section class="section" id="privacy">
+  <div class="section-label">Privacy</div>
+  <h2 class="section-title">Your new tab stays private</h2>
+  <p class="section-sub">Extended Page stores your preferences locally and never transmits anything about your browsing.</p>
+
+  <div class="privacy-grid">
+    <div class="priv-card">
+      <span class="priv-icon">🔒</span>
+      <div class="priv-title">Local Storage Only</div>
+      <div class="priv-desc">All settings — theme, wallpaper, accent color, search engine, clock preferences — are stored in your browser's local storage. They never leave your device.</div>
+    </div>
+    <div class="priv-card">
+      <span class="priv-icon">🚫</span>
+      <div class="priv-title">No Data Collection</div>
+      <div class="priv-desc">We collect nothing. No analytics, no telemetry, no usage tracking. The extension does not make any requests to our servers.</div>
+    </div>
+    <div class="priv-card">
+      <span class="priv-icon">🌤</span>
+      <div class="priv-title">Weather is Optional</div>
+      <div class="priv-desc">The weather widget is disabled by default. If you enable it, your city name is sent to the public wttr.in API. No account or API key is required or stored.</div>
+    </div>
+    <div class="priv-card">
+      <span class="priv-icon">📖</span>
+      <div class="priv-title">Minimal Permissions</div>
+      <div class="priv-desc">Extended Page requests only the permissions it genuinely needs. No broad host permissions, no access to page content, no reading of your passwords or form data.</div>
+    </div>
+    <div class="priv-card">
+      <span class="priv-icon">🤝</span>
+      <div class="priv-title">Cross-Extension Communication</div>
+      <div class="priv-desc">When paired with Extended History, the two extensions communicate directly using Chrome's secure extension messaging API. No third party is involved.</div>
+    </div>
+    <div class="priv-card">
+      <span class="priv-icon">💻</span>
+      <div class="priv-title">Open Source</div>
+      <div class="priv-desc">The full source code is available on GitHub. You can verify every claim on this page yourself, audit what the extension does, and contribute improvements.</div>
+    </div>
+  </div>
+
+  <a href="#privacy-policy" class="priv-policy-link">📄 Read the full Privacy Policy ↓</a>
+</section>
+
+<hr class="section-divider"/>
+
+<!-- ═══ PERMISSIONS -->
+<section class="section" id="permissions">
+  <div class="section-label">Permissions</div>
+  <h2 class="section-title">Why each permission is needed</h2>
+  <p class="section-sub">No permission is requested without a clear reason. Here's exactly what each one is used for.</p>
+
+  <div class="permissions-list">
+    <div class="perm-row">
+      <span class="perm-name">storage</span>
+      <span class="perm-reason">Saves your settings (theme, wallpaper, accent color, clock preferences, top sites cache) locally on your device.</span>
+    </div>
+    <div class="perm-row">
+      <span class="perm-name">history</span>
+      <span class="perm-reason">Used only to compute your top visited sites when Extended History is not installed. Read-only access, last 30 days only.</span>
+    </div>
+    <div class="perm-row">
+      <span class="perm-name">tabs</span>
+      <span class="perm-reason">Required to open the Full History page (chrome://history) in a new tab when the button is clicked.</span>
+    </div>
+    <div class="perm-row">
+      <span class="perm-name">bookmarks</span>
+      <span class="perm-reason">Allows the sidebar to display the contents of a bookmark folder you choose in settings. Read-only; no bookmarks are created or deleted.</span>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider"/>
+
+<!-- ═══ PRIVACY POLICY -->
+<section class="section" id="privacy-policy">
+  <div class="section-label">Privacy Policy</div>
+  <h2 class="section-title">Privacy Policy</h2>
+  <p class="section-sub">Last updated: March 2026</p>
+
+  <div style="margin-top:36px;display:flex;flex-direction:column;gap:28px;max-width:720px;">
+
+    <div>
+      <h3 style="font-size:0.95rem;font-weight:700;margin-bottom:8px;">1. Overview</h3>
+      <p style="font-size:0.83rem;color:var(--text2);line-height:1.7;">Extended Page ("the Extension") is a Chrome browser extension that replaces the default new tab page with a customizable interface. This Privacy Policy explains what data the Extension accesses, how it is used, and your rights regarding that data.</p>
+    </div>
+
+    <div>
+      <h3 style="font-size:0.95rem;font-weight:700;margin-bottom:8px;">2. Data We Collect</h3>
+      <p style="font-size:0.83rem;color:var(--text2);line-height:1.7;"><strong style="color:var(--text)">We do not collect any personal data.</strong> All information processed by Extended Page stays entirely on your device. This includes your settings (theme, wallpaper, accent color, search engine preference, clock configuration), your top sites cache derived from browser history, and any cached weather data. Nothing is transmitted to us or any third party.</p>
+    </div>
+
+    <div>
+      <h3 style="font-size:0.95rem;font-weight:700;margin-bottom:8px;">3. Local Storage</h3>
+      <p style="font-size:0.83rem;color:var(--text2);line-height:1.7;">The Extension stores user preferences using the Chrome <code style="font-family:var(--mono);font-size:0.78rem;background:var(--s2);padding:1px 5px;border-radius:4px;">localStorage</code> API under the key <code style="font-family:var(--mono);font-size:0.78rem;background:var(--s2);padding:1px 5px;border-radius:4px;">nt_settings</code>. A top sites cache is stored under <code style="font-family:var(--mono);font-size:0.78rem;background:var(--s2);padding:1px 5px;border-radius:4px;">nt_topsites_cache</code>. This data is local-only and can be cleared at any time by removing the extension or clearing browser storage.</p>
+    </div>
+
+    <div>
+      <h3 style="font-size:0.95rem;font-weight:700;margin-bottom:8px;">4. Browser History Access</h3>
+      <p style="font-size:0.83rem;color:var(--text2);line-height:1.7;">When Extended History is not installed, the Extension uses the <code style="font-family:var(--mono);font-size:0.78rem;background:var(--s2);padding:1px 5px;border-radius:4px;">chrome.history</code> API to compute your most visited domains over the past 30 days, solely for displaying the Top Sites widget. This data is processed locally, never stored in raw form, and never transmitted externally.</p>
+    </div>
+
+    <div>
+      <h3 style="font-size:0.95rem;font-weight:700;margin-bottom:8px;">5. Weather Widget</h3>
+      <p style="font-size:0.83rem;color:var(--text2);line-height:1.7;">The weather widget is disabled by default. If you enable it and enter a city name, that city name is sent to the public <a href="https://wttr.in" target="_blank" rel="noopener">wttr.in</a> API to retrieve weather data. No personally identifiable information (such as your IP address beyond what is inherent in any HTTP request) is controlled by us. No account or API key is required. You can disable the widget at any time in settings.</p>
+    </div>
+
+    <div>
+      <h3 style="font-size:0.95rem;font-weight:700;margin-bottom:8px;">6. Communication with Extended History</h3>
+      <p style="font-size:0.83rem;color:var(--text2);line-height:1.7;">When Extended History is installed, Extended Page communicates with it using Chrome's <code style="font-family:var(--mono);font-size:0.78rem;background:var(--s2);padding:1px 5px;border-radius:4px;">chrome.runtime.sendMessage</code> API to request history summaries and stored tab data. This communication is entirely local, between two extensions on your device. No data leaves your browser.</p>
+    </div>
+
+    <div>
+      <h3 style="font-size:0.95rem;font-weight:700;margin-bottom:8px;">7. Permissions Justification</h3>
+      <p style="font-size:0.83rem;color:var(--text2);line-height:1.7;">All permissions requested by the Extension are used exclusively for the functionality described in this policy. No permission is used to track, fingerprint, or identify users. See the Permissions section above for a full breakdown.</p>
+    </div>
+
+    <div>
+      <h3 style="font-size:0.95rem;font-weight:700;margin-bottom:8px;">8. Third-Party Services</h3>
+      <p style="font-size:0.83rem;color:var(--text2);line-height:1.7;">The only optional third-party service used is <a href="https://wttr.in" target="_blank" rel="noopener">wttr.in</a> for weather data (when the widget is enabled) and <a href="https://geocoding-api.open-meteo.com" target="_blank" rel="noopener">Open-Meteo</a> for city name autocomplete. Google's favicon service (<code style="font-family:var(--mono);font-size:0.78rem;background:var(--s2);padding:1px 5px;border-radius:4px;">google.com/s2/favicons</code>) is used to display site icons. Wallpaper thumbnails may load from Unsplash if you select a preset wallpaper. All other functionality is fully local.</p>
+    </div>
+
+    <div>
+      <h3 style="font-size:0.95rem;font-weight:700;margin-bottom:8px;">9. Data Deletion</h3>
+      <p style="font-size:0.83rem;color:var(--text2);line-height:1.7;">All data stored by Extended Page can be deleted by removing the extension from Chrome, or by clearing your browser's local storage for the extension. There is no account and no server-side data to delete.</p>
+    </div>
+
+    <div>
+      <h3 style="font-size:0.95rem;font-weight:700;margin-bottom:8px;">10. Changes to This Policy</h3>
+      <p style="font-size:0.83rem;color:var(--text2);line-height:1.7;">If this policy changes materially, the updated version will be published at this URL with a new "Last updated" date. Continued use of the Extension after changes constitutes acceptance of the updated policy.</p>
+    </div>
+
+    <div>
+      <h3 style="font-size:0.95rem;font-weight:700;margin-bottom:8px;">11. Contact</h3>
+      <p style="font-size:0.83rem;color:var(--text2);line-height:1.7;">For questions about this policy, open an issue on <a href="https://github.com/banekondic1996/Extended-History---Chrome" target="_blank" rel="noopener">GitHub</a> or join the <a href="https://discord.gg/xyzeh2WjmQ" target="_blank" rel="noopener">Discord server</a>.</p>
+    </div>
+
+  </div>
+</section>
+
+<hr class="section-divider"/>
+
+<!-- ═══ FAQ -->
+<section class="section" id="faq">
+  <div class="section-label">FAQ</div>
+  <h2 class="section-title">Frequently Asked Questions</h2>
+
+  <div class="faq-list">
+    <div class="faq-item">
+      <button class="faq-q">Is Extended Page free?</button>
+      <div class="faq-a">Yes, Extended Page is completely free with no premium tiers, subscriptions, or hidden costs.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q">Do I need Extended History for this to work?</button>
+      <div class="faq-a">No. Extended Page is fully functional on its own — clock, search, top sites from native browser history, bookmarks sidebar, wallpapers, and weather all work without Extended History. Pairing the two simply unlocks richer history-powered features like Most Visited and Stored Tabs in the sidebar.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q">Can I use both extensions at the same time?</button>
+      <div class="faq-a">Yes, that is the intended setup. Extended History overrides the chrome://history page, and Extended Page overrides the new tab page. Chrome allows one extension per override type, so there is no conflict between the two.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q">Where are my settings stored?</button>
+      <div class="faq-a">All settings are stored locally in your browser using localStorage under the key <code style="font-family:var(--mono);background:var(--s2);padding:1px 5px;border-radius:3px;font-size:0.78rem;">nt_settings</code>. They are never synced to the cloud or sent to any server.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q">Does the weather widget share my location?</button>
+      <div class="faq-a">No. The widget uses a city name you type manually — it never accesses your device's GPS or location services. The city name is sent to the wttr.in public API to fetch weather data, and nothing else is shared.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q">Will this slow down opening new tabs?</button>
+      <div class="faq-a">No. The page is lightweight, loads from local extension files with no blocking network requests. The top sites cache renders instantly from localStorage. Any fresh data fetches happen asynchronously after the page is already visible.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q">Does it work in other Chromium browsers?</button>
+      <div class="faq-a">Extended Page is built for Google Chrome but should work in most Chromium-based browsers like Brave, Edge, or Vivaldi. Full compatibility is not guaranteed for all features.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER -->
+<footer>
+  <div class="footer-brand">
+    <a class="nav-logo" href="#top" style="text-decoration:none;">
+      <div class="nav-logo-icon" style="width:28px;height:28px;font-size:13px;"><img style="height:28px;width:28px" src="icons/icon128.png"/></div>
+      <span class="nav-logo-text">Extended Page</span>
+    </a>
+    <p>A beautiful, private new tab page for Chrome. Works standalone or paired with Extended History.</p>
+  </div>
+  <div class="footer-col">
+    <h4>Links</h4>
+    <a href="#features">Features</a>
+    <a href="#privacy">Privacy</a>
+    <a href="#privacy-policy">Privacy Policy</a>
+    <a href="#faq">FAQ</a>
+  </div>
+  <div class="footer-col">
+    <h4>Ecosystem</h4>
+    <a href="https://elveapps.me/ExtendedHistory/">Extended History</a>
+    <a href="https://github.com/banekondic1996/Extended-History---Chrome">GitHub</a>
+    <a href="https://discord.gg/xyzeh2WjmQ">Discord</a>
+    <!-- <a href="https://elveapps.me/support.html">Support</a> -->
+  </div>
+</footer>
+<div class="footer-copy">© 2026 Extended Page. All rights reserved.</div>
+
+<script>
+// FAQ accordion
+document.querySelectorAll('.faq-q').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const item = btn.closest('.faq-item');
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  });
+});
+</script>
+</body>
+</html>
