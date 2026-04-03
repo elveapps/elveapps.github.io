@@ -3,115 +3,588 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta name="description" content="ElveApps">
+<meta name="description" content="ElveApps — Modern & Creative Software">
 <title>ElveApps</title>
 <link rel="icon" href="https://elveapps.me/elveapps_favicon.png" type="image/png" sizes="96x96">
 <style>
-    :root {
-        --bg: #0f172a;
-        --card: #111827;
-        --accent: #6366f1;
-        --accent-hover: #4f46e5;
-        --text: #f1f5f9;
-        --muted: #94a3b8;
-    }
+  :root {
+    --bg: #000000;
+    --surface: #0a0a0a;
+    --card: #0d0d0d;
+    --border: #1a1a1a;
+    --border-hover: #2a2a2a;
+    --accent: #00c896;
+    --accent-dim: rgba(0, 200, 150, 0.12);
+    --accent-border: rgba(0, 200, 150, 0.25);
+    --text: #f0f0f0;
+    --muted: #555;
+    --muted2: #777;
+  }
 
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: 'Inter', sans-serif;
-    }
+  *, *::before, *::after {
+    margin: 0; padding: 0;
+    box-sizing: border-box;
+  }
 
-    body {
-        background: linear-gradient(135deg, #0f172a, #1e293b);
-        color: var(--text);
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 20px;
-    }
+  html { scroll-behavior: smooth; }
 
-    .container {
-        background: var(--card);
-        padding: 50px 40px;
-        border-radius: 20px;
-        box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-        text-align: center;
-        max-width: 500px;
-        width: 100%;
-    }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
 
-    h1 {
-        font-size: 3rem;
-        font-weight: 800;
-        margin-bottom: 10px;
-        background: linear-gradient(90deg, #6366f1, #22d3ee);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
+  /* ── NAV ────────────────────────── */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    height: 56px;
+    background: rgba(0,0,0,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
 
-    p {
-        color: var(--muted);
-        margin-bottom: 40px;
-        font-size: 1rem;
-    }
+  .nav-logo {
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--accent);
+    text-decoration: none;
+  }
 
-    .links {
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-    }
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    list-style: none;
+  }
 
-    .btn {
-        text-decoration: none;
-        background: var(--accent);
-        color: white;
-        padding: 14px;
-        border-radius: 12px;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        box-shadow: 0 5px 15px rgba(99,102,241,0.3);
-    }
+  .nav-links a {
+    color: var(--muted2);
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    padding: 5px 12px;
+    border-radius: 6px;
+    transition: color 0.15s, background 0.15s;
+  }
 
-    .btn:hover {
-        background: var(--accent-hover);
-        transform: translateY(-3px);
-        box-shadow: 0 8px 20px rgba(79,70,229,0.4);
-    }
+  .nav-links a:hover {
+    color: var(--text);
+    background: #111;
+  }
 
-    footer {
-        margin-top: 40px;
-        font-size: 0.8rem;
-        color: var(--muted);
-    }
+  /* github dropdown */
+  .nav-github { position: relative; }
 
-    @media (max-width: 500px) {
-        h1 {
-            font-size: 2.2rem;
-        }
-    }
+  .nav-github > a {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .caret {
+    width: 10px;
+    height: 10px;
+    transition: transform 0.2s;
+  }
+
+  .nav-github:hover .caret { transform: rotate(180deg); }
+
+  .github-dropdown {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    background: #0d0d0d;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    min-width: 200px;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-4px);
+    transition: opacity 0.15s, transform 0.15s;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.8);
+  }
+
+  .nav-github:hover .github-dropdown {
+    opacity: 1;
+    pointer-events: all;
+    transform: translateY(0);
+  }
+
+  .github-dropdown a {
+    display: flex !important;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 14px !important;
+    font-size: 0.82rem !important;
+    border-radius: 0 !important;
+    border-bottom: 1px solid var(--border);
+    background: transparent !important;
+    color: var(--muted2) !important;
+    transition: background 0.1s, color 0.1s !important;
+  }
+
+  .github-dropdown a:last-child { border-bottom: none; }
+
+  .github-dropdown a:hover {
+    background: #111 !important;
+    color: var(--text) !important;
+  }
+
+  .gh-handle { flex: 1; }
+  .gh-label {
+    font-size: 0.7rem;
+    color: var(--muted);
+    background: #1a1a1a;
+    padding: 2px 7px;
+    border-radius: 4px;
+  }
+
+  /* ── HERO ───────────────────────── */
+  .hero {
+    padding: 80px 40px 64px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .hero-tag {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 24px;
+  }
+
+  .hero h1 {
+    font-size: clamp(2.2rem, 5vw, 3.6rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.08;
+    color: var(--text);
+    margin-bottom: 18px;
+    max-width: 600px;
+  }
+
+  .hero h1 em {
+    font-style: normal;
+    color: var(--accent);
+  }
+
+  .hero p {
+    color: var(--muted2);
+    font-size: 0.95rem;
+    max-width: 440px;
+    line-height: 1.7;
+  }
+
+  /* ── SECTIONS ───────────────────── */
+  .section-wrap {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 64px 40px;
+  }
+
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 36px;
+  }
+
+  .section-head h2 {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .section-head-line {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ── PORTFOLIO GRID ─────────────── */
+  .portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .app-card {
+    background: var(--card);
+    display: flex;
+    flex-direction: column;
+    transition: background 0.2s;
+  }
+
+  .app-card:hover { background: #101010; }
+
+  .card-thumb {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #090909;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .card-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.35s ease;
+  }
+
+  .app-card:hover .card-thumb img { transform: scale(1.03); }
+
+  .thumb-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    background: #080808;
+    transition: background 0.2s;
+  }
+
+  .app-card:hover .thumb-placeholder {
+    background: #0a0a0a;
+    color: var(--accent);
+  }
+
+  .thumb-placeholder .icon-wrap {
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+    transition: border-color 0.2s;
+  }
+
+  .app-card:hover .icon-wrap { border-color: var(--accent-border); }
+
+  .thumb-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+  }
+
+  .card-body {
+    padding: 20px 22px 22px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  .card-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  .tag {
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: var(--accent-dim);
+    color: var(--accent);
+    border: 1px solid var(--accent-border);
+  }
+
+  .card-name {
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+
+  .card-desc {
+    color: var(--muted2);
+    font-size: 0.875rem;
+    line-height: 1.65;
+    flex: 1;
+    margin-bottom: 18px;
+  }
+
+  .card-actions {
+    display: flex;
+    gap: 8px;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--accent);
+    color: #000;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 7px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    transition: opacity 0.15s, transform 0.15s;
+  }
+
+  .btn-primary:hover {
+    opacity: 0.88;
+    transform: translateY(-1px);
+  }
+
+  .btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--muted2);
+    text-decoration: none;
+    padding: 8px 14px;
+    border-radius: 7px;
+    font-size: 0.82rem;
+    font-weight: 500;
+    border: 1px solid var(--border);
+    transition: color 0.15s, border-color 0.15s;
+  }
+
+  .btn-ghost:hover {
+    color: var(--text);
+    border-color: var(--border-hover);
+  }
+
+  /* ── ABOUT ──────────────────────── */
+  #about-section {
+    border-top: 1px solid var(--border);
+  }
+
+  .about-inner {
+    max-width: 560px;
+  }
+
+  .about-inner p {
+    color: var(--muted2);
+    font-size: 0.95rem;
+    line-height: 1.8;
+  }
+
+  .about-inner strong {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .about-links {
+    display: flex;
+    gap: 10px;
+    margin-top: 24px;
+    flex-wrap: wrap;
+  }
+
+  /* ── FOOTER ─────────────────────── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 24px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  footer p {
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+
+  footer .footer-dot {
+    width: 4px;
+    height: 4px;
+    background: var(--accent);
+    border-radius: 50%;
+    display: inline-block;
+    margin: 0 8px;
+    vertical-align: middle;
+  }
+
+  /* ── RESPONSIVE ─────────────────── */
+  @media (max-width: 640px) {
+    nav { padding: 0 20px; }
+    .hero { padding: 56px 20px 48px; }
+    .section-wrap { padding: 48px 20px; }
+    footer { padding: 20px; }
+    .portfolio-grid { grid-template-columns: 1fr; }
+  }
 </style>
 </head>
-<!-- Analytics -->
-<!-- <script defer src="https://cloud.umami.is/script.js" data-website-id="c66fa6e1-92a4-4bfe-9c52-42a66c794ab1"></script> -->
-<!-- <script defer src="https://analytics-proxy-odgk5dpmk-banekondic19961s-projects.vercel.app/stats/script.js" data-website-id="c66fa6e1-92a4-4bfe-9c52-42a66c794ab1"></script> -->
 <body>
-<div class="container">
-    <h1>ElveApps</h1>
-    <p>Modern & Creative Software</p>
 
-    <div class="links">
-        <a href="https://elveapps.me/ExtendedHistory" class="btn">Extended History</a>
-        <a href="https://elveapps.me/ExtendedPage" class="btn">Extended Page</a>
-        <!---- <a href="https://banekondic1996.github.io/blog" class="btn">Personal Blog</a> --->
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">ElveApps</a>
+  <ul class="nav-links">
+    <li><a href="#portfolio">Portfolio</a></li>
+    <li class="nav-github">
+      <a href="#">
+        GitHub
+        <svg class="caret" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+      <div class="github-dropdown">
+        <a href="https://github.com/banekondic1996/" target="_blank" rel="noopener">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+          <span class="gh-handle">banekondic1996</span>
+          <span class="gh-label">Personal</span>
+        </a>
+        <a href="https://github.com/elveapps/" target="_blank" rel="noopener">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+          <span class="gh-handle">elveapps</span>
+          <span class="gh-label">Org</span>
+        </a>
+      </div>
+    </li>
+    <li><a href="#about-section">About</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-tag">Open Source &amp; Paid Software</div>
+  <h1>Modern &amp;<br><em>Creative</em> Software</h1>
+  <p>Tools built to fill gaps — free and open when it matters, paid to stay sustainable.</p>
+</div>
+
+<!-- PORTFOLIO -->
+<div class="section-wrap" id="portfolio">
+  <div class="section-head">
+    <h2>Portfolio</h2>
+    <div class="section-head-line"></div>
+  </div>
+
+  <div class="portfolio-grid">
+
+    <!-- Extended History -->
+    <div class="app-card">
+      <div class="card-thumb">
+        <div class="thumb-placeholder">
+          <div class="thumb-inner">
+            <div class="icon-wrap">🕓</div>
+            Extended History
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <span class="tag">Free &amp; Open Source</span>
+        </div>
+        <div class="card-name">Extended History</div>
+        <div class="card-desc">A browser extension that supercharges your browsing history with powerful search and filtering. Everything stays on your device — no data sent anywhere.</div>
+        <div class="card-actions">
+          <a href="https://elveapps.me/ExtendedHistory" class="btn-primary" target="_blank" rel="noopener">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            View App
+          </a>
+          <a href="https://github.com/banekondic1996/Extended-History---Chrome" class="btn-ghost" target="_blank" rel="noopener">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+            Source
+          </a>
+        </div>
+      </div>
     </div>
 
-    <footer>
-        © 2026 ElveApps. All rights reserved.
-    </footer>
+    <!-- Extended Page -->
+    <div class="app-card">
+      <div class="card-thumb">
+        <div class="thumb-placeholder">
+          <div class="thumb-inner">
+            <img src='https://github.com/banekondic1996/Extended-Page-Chrome/raw/main/screenshots/screen4.jpg'/>
+            Extended Page
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <span class="tag">Free &amp; Open Source</span>
+        </div>
+        <div class="card-name">Extended Page</div>
+        <div class="card-desc">A browser extension that adds powerful tools to any page — reader mode, quick notes, and productivity features built right into your browser.</div>
+        <div class="card-actions">
+          <a href="https://elveapps.me/ExtendedPage" class="btn-primary" target="_blank" rel="noopener">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            View App
+          </a>
+          <a href="https://github.com/banekondic1996/Extended-Page-Chrome" class="btn-ghost" target="_blank" rel="noopener">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+            Source
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
 </div>
+
+<!-- ABOUT -->
+<div id="about-section">
+  <div class="section-wrap">
+    <div class="section-head">
+      <h2>About</h2>
+      <div class="section-head-line"></div>
+    </div>
+    <div class="about-inner">
+      <p>Created by <strong>Bane Kondic</strong> with the goal to create <strong>free and open source software</strong> he believes should exist and doesn't care if it's free, but also to create <strong>paid software</strong> in order to earn income and sustain.</p>
+      <div class="about-links">
+        <a href="https://github.com/banekondic1996/" class="btn-ghost" target="_blank" rel="noopener">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+          banekondic1996
+        </a>
+        <a href="https://github.com/elveapps/" class="btn-ghost" target="_blank" rel="noopener">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+          elveapps
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2026 ElveApps<span class="footer-dot"></span>All rights reserved.</p>
+  <p>Made with purpose.</p>
+</footer>
 
 </body>
 </html>
